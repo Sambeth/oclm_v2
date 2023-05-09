@@ -15,8 +15,8 @@ object Main extends App {
 
   println(maleStudent1 |+| maleStudent2)
   println(femaleStudent1 |+| femaleStudent2)
-//  println(femaleStudent1 |+| maleStudent2)
-//  println(maleStudent1 |+| femaleStudent2)
+//  println(femaleStudent1 |+| maleStudent2) will not compile as expected
+//  println(maleStudent1 |+| femaleStudent2) will not compile as expected
 //  println(StudentSemigroup.apply.pair[Male](maleStudent1, femaleStudent2))
 
 }
