@@ -1,6 +1,7 @@
 package com.sambeth.oclmv2.models.Student
 
-import com.sambeth.oclmv2.models.Gender.Gender
+import com.sambeth.oclmv2.models.Assignment.Assignment._
+import com.sambeth.oclmv2.models.Gender.{Gender, Male}
 
 
 trait StudentGenderSemigroup[S] {
@@ -58,8 +59,64 @@ object StudentGenderSemigroup {
     def |+|(y: Student[G])(implicit s: StudentGenderSemigroup[Student[G]]): (Student[G], Student[G]) = s.pair(x, y)
   }
 
-//  implicit class maleStudentOtherAssignment[F[_], G](x: Elder[Male]) {
-//    def assignChairman: Chairman = Chairman(x)
-//  }
+  implicit class chairmanAssignment(owner: Elder[Male]) {
+    def assignChairman: Chairman = Chairman(owner)
+  }
 
+  implicit class openingPrayerAssignment(owner: AppointedMan[Male]) {
+    def assignOpeningPrayer: OpeningPrayer = OpeningPrayer(owner)
+  }
+
+  implicit class closingPrayerAssignment(owner: AppointedMan[Male]) {
+    def assignClosingPrayer: ClosingPrayer = ClosingPrayer(owner)
+  }
+
+  implicit class tenMinutesTalkAssignment(owner: AppointedMan[Male]) {
+    def assignTenMinutesTalk: TenMinutesTalk = TenMinutesTalk(owner)
+  }
+
+  implicit class spiritualGemsAssignment(owner: AppointedMan[Male]) {
+    def assignSpiritualGems: SpiritualGems = SpiritualGems(owner)
+  }
+
+  implicit class bibleReadingAssignment(owner: Student[Male]) {
+    def assignBibleReading: BibleReading = BibleReading(owner)
+  }
+
+  implicit class initialCallVideoAssignment(owner: Elder[Male]) {
+    def assignInitialCallVideo: InitialCallVideo = InitialCallVideo(owner)
+  }
+
+  implicit class returnVisitVideoAssignment(owner: Elder[Male]) {
+    def assignReturnVisitVideo: ReturnVisitVideo = ReturnVisitVideo(owner)
+  }
+
+  // add checks to make sure we have the right pairings
+  implicit class initialCallAssignment[G <: Gender](owner: Student[G]) {
+    def assignInitialCall(support: Student[G]): InitialCall[G] = {
+      InitialCall(owner, support)
+    }
+  }
+
+  implicit class returnVisitAssignment[G <: Gender](owner: Student[G]) {
+    def assignReturnVisit(support: Student[G]): ReturnVisit[G] =
+      ReturnVisit(owner, support)
+  }
+
+  implicit class bibleStudyAssignment[G <: Gender](owner: Student[G]) {
+    def assignBibleStudy(support: Student[G]): BibleStudy[G] =
+      BibleStudy(owner, support)
+  }
+
+  implicit class fiveMinutesTalkAssignment(owner: Student[Male]) {
+    def assignFiveMinutesTalk: FiveMinutesTalk = FiveMinutesTalk(owner)
+  }
+
+  implicit class adhocAssignment(owner: AppointedMan[Male]) {
+    def assignAdHoc(title: String): AdHoc = AdHoc(title, owner)
+  }
+
+  implicit class congregationBibleStudyAssignment(owner: Elder[Male]) {
+    def assignCongregationBibleStudy: CongregationBibleStudy = CongregationBibleStudy(owner)
+  }
 }

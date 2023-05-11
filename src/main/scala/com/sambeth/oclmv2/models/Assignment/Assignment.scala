@@ -4,10 +4,10 @@ import com.sambeth.oclmv2.models.Assignment.AssignmentType._
 import com.sambeth.oclmv2.models.Gender.Male
 import com.sambeth.oclmv2.models.Student.{Elder, Student}
 
-trait Assignment[T]
+trait Assignment[+T]
 
 object Assignment {
-  case class Chairman(owner: Student[Male]) extends Assignment[Others]
+  case class Chairman(owner: Elder[Male]) extends Assignment[Others]
 
   case class OpeningPrayer(owner: Student[Male]) extends Assignment[Others]
 

@@ -15,8 +15,10 @@ trait BaptizedPublisher[G] extends Publisher[G]
 final case class SimpleBaptizedPublisher[G](person: G) extends Publisher[G]
 final case class UnbaptizedPublisher[G](person: G) extends Publisher[G]
 final case class Pioneer[G](person: G) extends BaptizedPublisher[G]
-final case class MinisterialServant[Male](male: Male) extends BaptizedPublisher[Male]
-final case class Elder[Male](val male: Male) extends BaptizedPublisher[Male]
+
+trait AppointedMan[G] extends BaptizedPublisher[G]
+final case class MinisterialServant[Male](male: Male) extends AppointedMan[Male]
+final case class Elder[Male](val male: Male) extends AppointedMan[Male]
 
 object Student {
   def simpleStudent[G](person: G): SimpleStudent[G] = SimpleStudent(person)

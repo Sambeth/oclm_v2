@@ -1,7 +1,7 @@
 package com.sambeth.oclmv2
 
 
-import com.sambeth.oclmv2.models.Assignment.Assignment
+import com.sambeth.oclmv2.models.Assignment.Assignment._
 import com.sambeth.oclmv2.models.Gender.{Female, Gender, GenderSemigroup, Male}
 import com.sambeth.oclmv2.models.Gender.GenderSemigroup._
 import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Student, StudentGenderSemigroup}
@@ -31,29 +31,16 @@ object Main extends App {
   val unbaptizedFemaleStudent = Student.unbaptizedPublisher(female1)
 
 
-  println(StudentGenderSemigroup[Student[Male]].pair(elder1, elder2))
-  println(StudentGenderSemigroup[Student[Male]].pair(elder1, ministerialServant))
-  println(StudentGenderSemigroup[Student[Female]].pair(simpleFemaleStudent, simpleFemaleStudent))
-  println(StudentGenderSemigroup[Student[Male]].pair(elder1, ministerialServant))
+//  println(StudentAssignment[Student[Male], OpeningPrayer].assign(elder1))
+//  println(StudentAssignment[Student[Male], OpeningPrayer].assign(ministerialServant))
+//  println(StudentAssignment[Student[Male], OpeningPrayer].assign(simpleMaleStudent))
 
-
-  println(elder1 |+| elder2)
-  println(elder1 |+| ministerialServant)
   println(ministerialServant |+| ministerialServant)
-  println(elder1 |+| pioneerMaleStudent)
-  println(elder1 |+| baptizedMaleStudent)
-  println(elder1 |+| unbaptizedMaleStudent)
-  println(ministerialServant |+| pioneerMaleStudent)
-  println(ministerialServant |+| baptizedMaleStudent)
-  println(ministerialServant |+| unbaptizedMaleStudent)
-  println(pioneerMaleStudent |+| pioneerMaleStudent)
-  println(pioneerMaleStudent |+| baptizedMaleStudent)
-  println(pioneerMaleStudent |+| unbaptizedMaleStudent)
-  println(baptizedMaleStudent |+| baptizedMaleStudent)
-  println(baptizedMaleStudent |+| unbaptizedMaleStudent)
-  println(unbaptizedMaleStudent |+| unbaptizedMaleStudent)
+  println(elder1.assignOpeningPrayer)
+  println(ministerialServant.assignOpeningPrayer)
+  println(ministerialServant.assignClosingPrayer)
+  println(simpleMaleStudent.assignInitialCall(simpleMaleStudent))
+//  println(simpleMaleStudent.assignInitialCall(simpleFemaleStudent))
 
-  val elder: Student[Gender] = Student.elder(male1)
-  println(elder)
 
 }
