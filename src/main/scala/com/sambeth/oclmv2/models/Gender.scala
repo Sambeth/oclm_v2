@@ -4,7 +4,12 @@ sealed trait Gender {
   def age: Option[Int] = None
 }
 
+//trait Female extends Gender
+//trait Male extends Gender
+case class Male(name: String) extends Gender
+case class Female(name: String) extends Gender
+
 object Gender {
-  trait Female extends Gender
-  trait Male extends Gender
+  def male(name: String): Male = Male(name)
+  def female(name: String): Female = Female(name)
 }
