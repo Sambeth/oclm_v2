@@ -1,4 +1,6 @@
-package com.sambeth.oclmv2.models
+package com.sambeth.oclmv2.models.Student
+
+import com.sambeth.oclmv2.models.Gender.Male
 
 
 trait Student[+G] {
@@ -7,12 +9,12 @@ trait Student[+G] {
   def available: Boolean = true
 }
 
-final case class SimpleStudent[G](gender: G) extends Student[G]
+final case class SimpleStudent[G](person: G) extends Student[G]
 trait Publisher[G] extends Student[G]
 trait BaptizedPublisher[G] extends Publisher[G]
-final case class SimpleBaptizedPublisher[G](gender: G) extends Publisher[G]
-final case class UnbaptizedPublisher[G](gender: G) extends Publisher[G]
-final case class Pioneer[G](gender: G) extends BaptizedPublisher[G]
+final case class SimpleBaptizedPublisher[G](person: G) extends Publisher[G]
+final case class UnbaptizedPublisher[G](person: G) extends Publisher[G]
+final case class Pioneer[G](person: G) extends BaptizedPublisher[G]
 final case class MinisterialServant[Male](male: Male) extends BaptizedPublisher[Male]
 final case class Elder[Male](val male: Male) extends BaptizedPublisher[Male]
 

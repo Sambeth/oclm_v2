@@ -1,9 +1,11 @@
 package com.sambeth.oclmv2
 
 
-import models.{Assignment, Elder, Female, Gender, GenderSemigroup, Male, MinisterialServant, Student, StudentGenderSemigroup}
-import models.GenderSemigroup._
-import models.StudentGenderSemigroup._
+import com.sambeth.oclmv2.models.Assignment.Assignment
+import com.sambeth.oclmv2.models.Gender.{Female, Gender, GenderSemigroup, Male}
+import com.sambeth.oclmv2.models.Gender.GenderSemigroup._
+import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Student, StudentGenderSemigroup}
+import com.sambeth.oclmv2.models.Student.StudentGenderSemigroup._
 
 
 object Main extends App {
@@ -13,8 +15,6 @@ object Main extends App {
   val male3 = Gender.male("Slim")
   val female1 = Gender.female("Phyll")
 
-//  println(male1 + male2)
-//  println(female1 + female1)
   println()
   val elder1 = Student.elder(male1)
   val elder2 = Student.elder(male2)
@@ -33,10 +33,8 @@ object Main extends App {
 
   println(StudentGenderSemigroup[Student[Male]].pair(elder1, elder2))
   println(StudentGenderSemigroup[Student[Male]].pair(elder1, ministerialServant))
-//  println(StudentGenderSemigroup[Student[Male]].pair(elder1, simpleFemaleStudent))
   println(StudentGenderSemigroup[Student[Female]].pair(simpleFemaleStudent, simpleFemaleStudent))
   println(StudentGenderSemigroup[Student[Male]].pair(elder1, ministerialServant))
-//  println(StudentGenderSemigroup[Student[Male]].pair(elder1, simpleFemaleStudent))
 
 
   println(elder1 |+| elder2)
@@ -54,7 +52,6 @@ object Main extends App {
   println(baptizedMaleStudent |+| baptizedMaleStudent)
   println(baptizedMaleStudent |+| unbaptizedMaleStudent)
   println(unbaptizedMaleStudent |+| unbaptizedMaleStudent)
-//  baptizedMaleStudent.
 
   val elder: Student[Gender] = Student.elder(male1)
   println(elder)

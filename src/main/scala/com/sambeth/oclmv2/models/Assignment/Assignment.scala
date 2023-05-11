@@ -1,7 +1,8 @@
-package com.sambeth.oclmv2.models
+package com.sambeth.oclmv2.models.Assignment
 
-import AssignmentType._
-import Gender._
+import com.sambeth.oclmv2.models.Assignment.AssignmentType._
+import com.sambeth.oclmv2.models.Gender.Male
+import com.sambeth.oclmv2.models.Student.{Elder, Student}
 
 trait Assignment[T]
 

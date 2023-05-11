@@ -1,4 +1,6 @@
-package com.sambeth.oclmv2.models
+package com.sambeth.oclmv2.models.Student
+
+import com.sambeth.oclmv2.models.Gender.Gender
 
 
 trait StudentGenderSemigroup[S] {
@@ -10,7 +12,6 @@ object StudentGenderSemigroup {
 
   implicit def studentGenderSemigroup[G <: Gender]: StudentGenderSemigroup[Student[G]] = new StudentGenderSemigroup[Student[G]] {
     def pair(x: Student[G], y: Student[G]): (Student[G], Student[G]) = {
-      println(x.getClass, y.getClass)
       (x, y) match {
         // valid elder pairings
         case (Elder(_), Elder(_)) => (x, y)

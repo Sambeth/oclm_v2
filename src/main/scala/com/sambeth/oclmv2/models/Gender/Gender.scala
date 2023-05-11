@@ -1,4 +1,4 @@
-package com.sambeth.oclmv2.models
+package com.sambeth.oclmv2.models.Gender
 
 sealed trait Gender {
   def age: Option[Int] = None
