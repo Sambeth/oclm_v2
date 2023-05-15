@@ -4,14 +4,14 @@ import com.sambeth.oclmv2.models.Assignment.Assignment._
 import com.sambeth.oclmv2.models.Gender.{Gender, Male}
 
 
-trait StudentGenderSemigroup[S] {
+trait StudentGender[S] {
   def pair(x: S, y: S): (S, S)
 }
 
-object StudentGenderSemigroup {
-  def apply[S](implicit s: StudentGenderSemigroup[S]): StudentGenderSemigroup[S] = s
+object StudentGender {
+  def apply[S](implicit s: StudentGender[S]): StudentGender[S] = s
 
-  implicit def studentGenderSemigroup[G <: Gender]: StudentGenderSemigroup[Student[G]] = new StudentGenderSemigroup[Student[G]] {
+  implicit def studentGender[G <: Gender]: StudentGender[Student[G]] = new StudentGender[Student[G]] {
     def pair(x: Student[G], y: Student[G]): (Student[G], Student[G]) = {
       (x, y) match {
         // valid elder pairings
@@ -55,8 +55,8 @@ object StudentGenderSemigroup {
     }
   }
 
-  implicit class studentGenderSemigroupOps[G <: Gender](x: Student[G]) {
-    def |+|(y: Student[G])(implicit s: StudentGenderSemigroup[Student[G]]): (Student[G], Student[G]) = s.pair(x, y)
+  implicit class studentGenderOps[G <: Gender](x: Student[G]) {
+    def |+|(y: Student[G])(implicit s: StudentGender[Student[G]]): (Student[G], Student[G]) = s.pair(x, y)
   }
 
   implicit class chairmanAssignment(owner: Elder[Male]) {

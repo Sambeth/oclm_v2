@@ -2,10 +2,10 @@ package com.sambeth.oclmv2
 
 
 import com.sambeth.oclmv2.models.Assignment.Assignment._
-import com.sambeth.oclmv2.models.Gender.{Female, Gender, GenderSemigroup, Male}
-import com.sambeth.oclmv2.models.Gender.GenderSemigroup._
-import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Student, StudentGenderSemigroup}
-import com.sambeth.oclmv2.models.Student.StudentGenderSemigroup._
+import com.sambeth.oclmv2.models.Gender.{Female, Gender, GenderMatch, Male}
+import com.sambeth.oclmv2.models.Gender.GenderMatch._
+import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Student, StudentGender}
+import com.sambeth.oclmv2.models.Student.StudentGender._
 
 
 object Main extends App {

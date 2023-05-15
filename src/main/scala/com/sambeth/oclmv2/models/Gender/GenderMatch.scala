@@ -1,13 +1,13 @@
 package com.sambeth.oclmv2.models.Gender
 
-trait GenderSemigroup[G] {
+trait GenderMatch[G] {
   def checkMatch(x: G, y: G): Boolean
 }
 
-object GenderSemigroup {
-  def apply[G](implicit g: GenderSemigroup[G]): GenderSemigroup[G] = g
+object GenderMatch {
+  def apply[G](implicit g: GenderMatch[G]): GenderMatch[G] = g
 
-  implicit def genderSemigroup[G <: Gender]: GenderSemigroup[G] = new GenderSemigroup[G] {
+  implicit def genderMatch[G <: Gender]: GenderMatch[G] = new GenderMatch[G] {
     def checkMatch(x: G, y: G): Boolean =
       (x, y) match {
         case (x: Male, y: Male) => true
@@ -16,6 +16,6 @@ object GenderSemigroup {
   }
 
   implicit class genderSemiGroupOps[G <: Gender](x: G) {
-    def +(y: G)(implicit g: GenderSemigroup[G]): Boolean = g.checkMatch(x, y)
+    def +(y: G)(implicit g: GenderMatch[G]): Boolean = g.checkMatch(x, y)
   }
 }
