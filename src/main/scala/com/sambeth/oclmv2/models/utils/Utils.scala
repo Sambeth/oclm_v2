@@ -5,8 +5,9 @@ import com.sambeth.oclmv2.models.Assignment.Assignment._
 import com.sambeth.oclmv2.models.Assignment.Assign._
 import com.sambeth.oclmv2.models.Gender.Gender
 import com.sambeth.oclmv2.models.Gender.Gender._
-import com.sambeth.oclmv2.models.Student.Student
+import com.sambeth.oclmv2.models.Student.{Student, StudentGroup}
 import com.sambeth.oclmv2.models.Student.Student._
+import com.typesafe.config.{Config, ConfigFactory}
 
 
 object Utils {
@@ -48,4 +49,21 @@ object Utils {
 
   val assignFiveMinutesTalk: Reader[Student[Male], FiveMinutesTalk] =
     Reader((e: Student[Male]) => e.assignFiveMinutesTalk)
+
+  val studentsMap: Map[String, List[Student[Gender]]] = Map(
+    "elders" -> StudentGroup.elders.collect().toList,
+    "ministerialServants" -> StudentGroup.ministerialServants.collect().toList,
+    "malePioneers" -> StudentGroup.malePioneers.collect().toList,
+    "baptizedMalePublishers" -> StudentGroup.baptizedMalePublishers.collect().toList,
+    "unbaptizedMalePublishers" -> StudentGroup.unbaptizedMalePublishers.collect().toList,
+    "simpleMaleStudents" -> StudentGroup.simpleMaleStudents.collect().toList,
+    "femalePioneers" -> StudentGroup.femalePioneers.collect().toList,
+    "baptizedFemalePublishers" -> StudentGroup.baptizedFemalePublishers.collect().toList,
+    "unbaptizedFemalePublishers" -> StudentGroup.unbaptizedFemalePublishers.collect().toList,
+    "simpleFemaleStudents" -> StudentGroup.simpleFemaleStudents.collect().toList,
+  )
+
+  val scheduleConfig: Config = ConfigFactory.load("application.conf")
+
+  final case class db(schedule: Config, students: Map[String, List[Student[Gender]]])
 }
