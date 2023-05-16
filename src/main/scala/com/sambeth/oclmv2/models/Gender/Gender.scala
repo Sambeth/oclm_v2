@@ -14,15 +14,9 @@ sealed trait Gender {
 
 //trait Female extends Gender
 //trait Male extends Gender
-case class Male(id: String,
-                firstName: String,
-                lastName: String,
-                pioneer: String,
-                baptized: String,
-                publisher: String,
-                ministerialServant: String,
-                elder: String) extends Gender
-case class Female(id: String,
+
+object Gender {
+  case class Male(id: String,
                   firstName: String,
                   lastName: String,
                   pioneer: String,
@@ -31,7 +25,15 @@ case class Female(id: String,
                   ministerialServant: String,
                   elder: String) extends Gender
 
-object Gender {
+  case class Female(id: String,
+                    firstName: String,
+                    lastName: String,
+                    pioneer: String,
+                    baptized: String,
+                    publisher: String,
+                    ministerialServant: String,
+                    elder: String) extends Gender
+
   def male(id: String,
            firstName: String,
            lastName: String,

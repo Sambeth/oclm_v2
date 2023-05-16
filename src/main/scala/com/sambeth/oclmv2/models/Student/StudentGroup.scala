@@ -1,7 +1,7 @@
-package com.sambeth.oclmv2.models.Group
+package com.sambeth.oclmv2.models.Student
 
-import com.sambeth.oclmv2.models.Gender.{Female, Male}
-import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Pioneer, SimpleBaptizedPublisher, SimpleStudent, UnbaptizedPublisher}
+import com.sambeth.oclmv2.models.Gender.Gender._
+import com.sambeth.oclmv2.models.Student.Student._
 import org.apache.spark.sql.{Dataset, SparkSession}
 
 

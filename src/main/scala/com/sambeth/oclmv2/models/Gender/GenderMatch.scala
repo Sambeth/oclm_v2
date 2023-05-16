@@ -1,5 +1,7 @@
 package com.sambeth.oclmv2.models.Gender
 
+import com.sambeth.oclmv2.models.Gender.Gender._
+
 trait GenderMatch[G] {
   def checkMatch(x: G, y: G): Boolean
 }

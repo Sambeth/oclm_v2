@@ -2,11 +2,12 @@ package com.sambeth.oclmv2
 
 
 import com.sambeth.oclmv2.models.Assignment.Assignment._
-import com.sambeth.oclmv2.models.Gender.{Female, Gender, GenderMatch, Male}
+import com.sambeth.oclmv2.models.Assignment.Assign._
 import com.sambeth.oclmv2.models.Gender.GenderMatch._
-import com.sambeth.oclmv2.models.Group.StudentGroup
-import com.sambeth.oclmv2.models.Student.{Elder, MinisterialServant, Student, StudentGender}
-import com.sambeth.oclmv2.models.Student.StudentGender._
+import com.sambeth.oclmv2.models.Student.Student._
+import com.sambeth.oclmv2.models.Student.StudentPairing._
+import com.sambeth.oclmv2.models.Student.StudentGroup
+import com.typesafe.config.{Config, ConfigFactory}
 
 
 object Main extends App {
@@ -41,22 +42,23 @@ object Main extends App {
 //  println(ministerialServant.assignOpeningPrayer)
 //  println(ministerialServant.assignClosingPrayer)
 //  println(simpleMaleStudent.assignInitialCall(simpleMaleStudent))
-  StudentGroup.simpleFemaleStudents.show()
-  StudentGroup.unbaptizedFemalePublishers.show()
-  StudentGroup.baptizedFemalePublishers.show()
-  StudentGroup.femalePioneers.show()
-
-  StudentGroup.simpleMaleStudents.show()
-  StudentGroup.unbaptizedMalePublishers.show()
-  StudentGroup.baptizedMalePublishers.show()
-  StudentGroup.malePioneers.show()
-  StudentGroup.ministerialServants.show()
-  StudentGroup.elders.show()
-
-
-//  println(StudentGroup.simpleFemaleStudents)
 //  StudentGroup.simpleFemaleStudents.show()
-//  println(simpleMaleStudent.assignInitialCall(simpleFemaleStudent))
+//  StudentGroup.unbaptizedFemalePublishers.show()
+//  StudentGroup.baptizedFemalePublishers.show()
+//  StudentGroup.femalePioneers.show()
+//
+//  StudentGroup.simpleMaleStudents.show()
+  println(StudentGroup.simpleMaleStudents.collect().toList.map(s => s.assignBibleStudy))
+//  StudentGroup.unbaptizedMalePublishers.show()
+//  StudentGroup.baptizedMalePublishers.show()
+//  StudentGroup.malePioneers.show()
+//  StudentGroup.ministerialServants.show()
+//  StudentGroup.elders.show()
+
+  val applicationConf: Config = ConfigFactory.load("application.conf")
+  println(applicationConf.getList("LivingAsChristians.AdHoc"))
+
+
 
 
 }
