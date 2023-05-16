@@ -1,6 +1,6 @@
 package com.sambeth.oclmv2.models.utils
 
-import cats.data.Kleisli
+import cats.data.Reader
 import com.sambeth.oclmv2.models.Assignment.Assignment._
 import com.sambeth.oclmv2.models.Assignment.Assign._
 import com.sambeth.oclmv2.models.Gender.Gender
@@ -12,40 +12,40 @@ import com.sambeth.oclmv2.models.Student.Student._
 object Utils {
 
   // appointed men assignments
-  val assignChairman: Kleisli[Option, Elder[Male], Chairman] =
-    Kleisli((e: Elder[Male]) => Option(e.assignChairman))
+  val assignChairman: Reader[Elder[Male], Chairman] =
+    Reader((e: Elder[Male]) => e.assignChairman)
 
-  val assignOpeningPrayer: Kleisli[Option, AppointedMan[Male], OpeningPrayer] =
-    Kleisli((e: AppointedMan[Male]) => Option(e.assignOpeningPrayer))
+  val assignOpeningPrayer: Reader[AppointedMan[Male], OpeningPrayer] =
+    Reader((e: AppointedMan[Male]) => e.assignOpeningPrayer)
 
-  val assignClosingPrayer: Kleisli[Option, AppointedMan[Male], ClosingPrayer] =
-    Kleisli((e: AppointedMan[Male]) => Option(e.assignClosingPrayer))
+  val assignClosingPrayer: Reader[AppointedMan[Male], ClosingPrayer] =
+    Reader((e: AppointedMan[Male]) => e.assignClosingPrayer)
 
-  val assignTenMinutesTalk: Kleisli[Option, AppointedMan[Male], String => TenMinutesTalk] =
-    Kleisli((e: AppointedMan[Male]) => Option(e.assignTenMinutesTalk))
+  val assignTenMinutesTalk: Reader[AppointedMan[Male], String => TenMinutesTalk] =
+    Reader((e: AppointedMan[Male]) => e.assignTenMinutesTalk)
 
-  val assignInitialCallVideo: Kleisli[Option, Elder[Male], InitialCallVideo] =
-    Kleisli((e: Elder[Male]) => Option(e.assignInitialCallVideo))
+  val assignInitialCallVideo: Reader[Elder[Male], InitialCallVideo] =
+    Reader((e: Elder[Male]) => e.assignInitialCallVideo)
 
-  val assignReturnVisitVideo: Kleisli[Option, Elder[Male], ReturnVisitVideo] =
-    Kleisli((e: Elder[Male]) => Option(e.assignReturnVisitVideo))
+  val assignReturnVisitVideo: Reader[Elder[Male], ReturnVisitVideo] =
+    Reader((e: Elder[Male]) => e.assignReturnVisitVideo)
 
-  val assignAdHoc: Kleisli[Option, AppointedMan[Male], AdHoc] =
-    Kleisli((e: AppointedMan[Male]) => Option(e.assignAdHoc("")))
+  val assignAdHoc: Reader[AppointedMan[Male], String => AdHoc] =
+    Reader((e: AppointedMan[Male]) => e.assignAdHoc)
 
-  val assignCongregationBibleStudy: Kleisli[Option, Elder[Male], CongregationBibleStudy] =
-    Kleisli((e: Elder[Male]) => Option(e.assignCongregationBibleStudy))
+  val assignCongregationBibleStudy: Reader[Elder[Male], CongregationBibleStudy] =
+    Reader((e: Elder[Male]) => e.assignCongregationBibleStudy)
 
   // school assignments
-  def assignInitialCall[G <: Gender]: Kleisli[Option, Student[G], Student[G] => InitialCall[G]] =
-    Kleisli((e: Student[G]) => Option(e.assignInitialCall))
+  def assignInitialCall[G <: Gender]: Reader[Student[G], Student[G] => InitialCall[G]] =
+    Reader((e: Student[G]) => e.assignInitialCall)
 
-  def assignReturnVisit[G <: Gender]: Kleisli[Option, Student[G], Student[G] => ReturnVisit[G]] =
-    Kleisli((e: Student[G]) => Option(e.assignReturnVisit))
+  def assignReturnVisit[G <: Gender]: Reader[Student[G], Student[G] => ReturnVisit[G]] =
+    Reader((e: Student[G]) => e.assignReturnVisit)
 
-  def assignBibleStudy[G <: Gender]: Kleisli[Option, Student[G], Student[G] => BibleStudy[G]] =
-    Kleisli((e: Student[G]) => Option(e.assignBibleStudy))
+  def assignBibleStudy[G <: Gender]: Reader[Student[G], Student[G] => BibleStudy[G]] =
+    Reader((e: Student[G]) => e.assignBibleStudy)
 
-  val assignFiveMinutesTalk: Kleisli[Option, Student[Male], FiveMinutesTalk] =
-    Kleisli((e: Student[Male]) => Option(e.assignFiveMinutesTalk))
+  val assignFiveMinutesTalk: Reader[Student[Male], FiveMinutesTalk] =
+    Reader((e: Student[Male]) => e.assignFiveMinutesTalk)
 }
