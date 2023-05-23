@@ -12,6 +12,8 @@ object StudentGroup {
     .config("spark.master", "local")
     .getOrCreate()
 
+  spark.sparkContext.setLogLevel("ERROR")
+
   import spark.implicits._
 
   private val membersDf: Unit = spark
@@ -29,6 +31,10 @@ object StudentGroup {
     "SELECT * FROM availableStudents WHERE gender = 'Female'"
   ).as[Female]
 
+  females.cache()
+
+//  val femalesMap = females.map(f => Map(f.id -> f))
+
   val simpleFemaleStudents: Dataset[SimpleStudent[Female]] = females
     .where("publisher = 'No'").map(female => SimpleStudent(female))
 
@@ -45,6 +51,10 @@ object StudentGroup {
   private val males: Dataset[Male] = spark.sql(
     "SELECT * FROM availableStudents WHERE gender = 'Male'"
   ).as[Male]
+
+  males.cache()
+
+//  val malesMap = males.map(f => Map(f.id -> f))
 
   val simpleMaleStudents: Dataset[SimpleStudent[Male]] = males
     .where("publisher = 'No'").map(male => SimpleStudent(male))
