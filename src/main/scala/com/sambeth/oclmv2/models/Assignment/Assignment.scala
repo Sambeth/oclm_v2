@@ -30,7 +30,7 @@ object Assignment {
 
   case class BibleStudy[G](owner: Student[G], support: Student[G]) extends Assignment[ApplyYourselfToFieldMinistry]
 
-  case class FiveMinutesTalk(owner: Student[Male]) extends Assignment[ApplyYourselfToFieldMinistry]
+  case class FiveMinutesTalk(title: String, owner: Student[Male]) extends Assignment[ApplyYourselfToFieldMinistry]
 
   case class AdHoc(title: String, owner: AppointedMan[Male]) extends Assignment[LivingAsChristians]
 
@@ -41,5 +41,7 @@ object Assignment {
   def bibleStudy[G](owner: Student[G])(support: Student[G]): BibleStudy[G] = BibleStudy(owner, support)
 
   def tenMinutesTalk(owner: AppointedMan[Male])(title: String): TenMinutesTalk = TenMinutesTalk(title, owner)
+
+  def fiveMinutesTalk(owner: Student[Male])(title: String): FiveMinutesTalk = FiveMinutesTalk(title, owner)
   def adHoc(owner: AppointedMan[Male])(title: String): AdHoc = AdHoc(title, owner)
 }

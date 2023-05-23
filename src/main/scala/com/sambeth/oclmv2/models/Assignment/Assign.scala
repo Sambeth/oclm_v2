@@ -54,7 +54,7 @@ object Assign {
   }
 
   implicit class fiveMinutesTalkAssignment(owner: Student[Male]) {
-    def assignFiveMinutesTalk: FiveMinutesTalk = FiveMinutesTalk(owner)
+    def assignFiveMinutesTalk: String => FiveMinutesTalk = fiveMinutesTalk(owner)
   }
 
   implicit class adhocAssignment(owner: AppointedMan[Male]) {
