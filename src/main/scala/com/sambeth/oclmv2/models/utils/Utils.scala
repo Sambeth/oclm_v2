@@ -11,6 +11,7 @@ import com.sambeth.oclmv2.models.Student.{Student, StudentGroup}
 import com.sambeth.oclmv2.models.Student.Student._
 import com.typesafe.config.{Config, ConfigFactory}
 
+import scala.annotation.tailrec
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.util.Random
 
@@ -84,26 +85,26 @@ object Utils {
   //      ++ studentsMap("simpleFemaleStudents")
   //    )
   //  )
-  type AllStudentsTuple = Tuple10[
+  type AllStudentsTuple = (
     List[Elder[Male]],
-    List[MinisterialServant[Male]],
-    List[Pioneer[Male]],
-    List[SimpleBaptizedPublisher[Male]],
-    List[UnbaptizedPublisher[Male]],
-    List[SimpleStudent[Male]],
-    List[Pioneer[Female]],
-    List[SimpleBaptizedPublisher[Female]],
-    List[UnbaptizedPublisher[Female]],
-    List[SimpleStudent[Female]]
-  ]
+      List[AppointedMan[Male]],
+      List[Student[Male]],
+      //    List[SimpleBaptizedPublisher[Male]],
+      //    List[UnbaptizedPublisher[Male]],
+      //    List[SimpleStudent[Male]],
+      List[Pioneer[Female]],
+      List[SimpleBaptizedPublisher[Female]],
+      List[UnbaptizedPublisher[Female]],
+      List[SimpleStudent[Female]]
+    )
 
   val studentMapTupled: AllStudentsTuple = (
     StudentGroup.elders.collect().toList,
-    StudentGroup.ministerialServants.collect().toList,
-    StudentGroup.malePioneers.collect().toList,
-    StudentGroup.baptizedMalePublishers.collect().toList,
-    StudentGroup.unbaptizedMalePublishers.collect().toList,
-    StudentGroup.simpleMaleStudents.collect().toList,
+    StudentGroup.ministerialServants.collect().toList ++ StudentGroup.elders.collect().toList,
+    StudentGroup.malePioneers.collect().toList
+      ++ StudentGroup.baptizedMalePublishers.collect().toList
+      ++ StudentGroup.unbaptizedMalePublishers.collect().toList
+      ++ StudentGroup.simpleMaleStudents.collect().toList,
     StudentGroup.femalePioneers.collect().toList,
     StudentGroup.baptizedFemalePublishers.collect().toList,
     StudentGroup.unbaptizedFemalePublishers.collect().toList,
@@ -120,19 +121,19 @@ object Utils {
 
   final case class MidWeekMeeting(
                                chairman: Chairman,
-//                               openingPrayer: OpeningPrayer,
-//                               closingPrayer: ClosingPrayer,
-//                               tenMinutesTalk: TenMinutesTalk,
-//                               spiritualGems: SpiritualGems,
-//                               bibleReading: BibleReading,
-//                               initialCallVideo: Option[InitialCallVideo] = None,
-//                               returnVisitVideo: Option[ReturnVisitVideo] = None,
+                               openingPrayer: OpeningPrayer,
+                               closingPrayer: ClosingPrayer,
+                               tenMinutesTalk: TenMinutesTalk,
+                               spiritualGems: SpiritualGems,
+                               bibleReading: BibleReading,
+                               initialCallVideo: Option[InitialCallVideo] = None,
+                               returnVisitVideo: Option[ReturnVisitVideo] = None,
 //                               initialCall: Option[InitialCall[_]] = None,
 //                               returnVisit: Option[ReturnVisit[_]] = None,
 //                               bibleStudy: Option[BibleStudy[_]] = None,
-//                               fiveMinutesTalk: Option[FiveMinutesTalk] = None,
-//                               adHoc: List[AdHoc] = List.empty,
-//                               congregationBibleStudy: CongregationBibleStudy
+                               fiveMinutesTalk: Option[FiveMinutesTalk] = None,
+                               adHoc: List[AdHoc] = List.empty,
+                               congregationBibleStudy: CongregationBibleStudy
                                )
 
   type OCLMSchedule = List[MidWeekMeeting]
@@ -147,23 +148,23 @@ object Utils {
   def selectAvailableElder(func: Int => Int): State[AllStudentsTuple, Elder[Male]]
     = State(students => {
         val elders = students._1
+        val apppointedMen = students._2
         val position = func(elders.length)
         val elder = elders(position)
-        (students.copy(_1 = elders.filterNot(_ == elder)), elder)
+        (students.copy(_1 = elders.filterNot(_ == elder), _2 = apppointedMen.filterNot(_ == elder)), elder)
       }
     )
 
-//  def selectAvailableAppointedMan(title: String, func: Int => Int): State[List[Student[Gender]], Option[(String, AppointedMan[Male])]]
-//    = State(students => {
-//        val appointedMan = students.filter {
-//          case _: AppointedMan[Male] => true
-//          case _ => false
-//        }.asInstanceOf[List[AppointedMan[Male]]]
-//        val position = func(appointedMan.length)
-//        (students.filterNot(_ == appointedMan(position)), Option((title, appointedMan(position))))
-//      }
-//  )
-//
+  def selectAvailableAppointedMan(title: String, func: Int => Int): State[AllStudentsTuple, Option[(String, AppointedMan[Male])]]
+    = State(students => {
+        val elders = students._1
+        val appointedMen = students._2
+        val position = func(appointedMen.length)
+        val appointedMan = appointedMen(position)
+        (students.copy(_1 = elders.filterNot(_ == appointedMan), _2 = appointedMen.filterNot(_ == appointedMan)), Option((title, appointedMan)))
+      }
+  )
+
 //  def selectAvailableStudent(func: Int => Int): State[List[Student[Gender]], Option[Student[Gender]]]
 //    = State(students => {
 //      val person = students.filter {
@@ -175,22 +176,15 @@ object Utils {
 //    }
 //  )
 //
-//  def selectAvailableMaleStudent(title: String, func: Int => Int): State[List[Student[Gender]], Option[(String, Student[Male])]]
-//    = State(students => {
-//      val persons = students.filter {
-//        case _: AppointedMan[Male] => true
-//        case _: Pioneer[Male] => true
-//        case _: UnbaptizedPublisher[Male] => true
-//        case _: SimpleBaptizedPublisher[Male] => true
-//        case _: SimpleStudent[Male] => true
-//        case _ => false
-//      }.asInstanceOf[List[Student[Male]]]
-////      println(persons)
-//      val position = func(persons.length)
-//      (students.filterNot(_ == persons(position)), Option(title, persons(position)))
-//    }
-//  )
-//
+  def selectAvailableMaleStudent(title: String, func: Int => Int): State[AllStudentsTuple, Option[(String, Student[Male])]]
+    = State(students => {
+      val maleStudents = students._3
+      val position = func(maleStudents.length)
+      val maleStudent = maleStudents(position)
+      (students.copy(_3 = maleStudents.filterNot(_ == maleStudent)), Option((title, maleStudent)))
+    }
+  )
+
 //  def assignPairedAssignmentIfExists(config: Config, assignmentName: String, func: Int => Int): State[List[Student[Gender]], Option[Student[Gender]]] =
 //    State(students => {
 //        if (config.getObject("ApplyYourselfToFieldMinistry").containsKey("PairedAssignments")) {
@@ -202,53 +196,58 @@ object Utils {
 //      }
 //    )
 //
-//  def assignVideoAssignmentIfExists(config: Config, assignmentName: String, chairman: Elder[Male]): State[List[Student[Gender]], Option[Elder[Male]]] =
-//    State(students => {
-//        if (config.getObject("ApplyYourselfToFieldMinistry").containsKey("VideoAssignments")) {
-//          val assignmentList = config.getList("ApplyYourselfToFieldMinistry.VideoAssignments").asScala.toList
-//          if (assignmentList.contains(assignmentName)) (students, Option(chairman)) else (students, None)
-//        } else {
-//          (students, None)
-//        }
-//      }
-//    )
-//
-//  def assignAdhocAssignmentIfExists(config: Config, func: Int => Int): State[List[Student[Gender]], Option[List[AdHoc]]] =
-//    State(students => {
-//      if (config.getObject("LivingAsChristians").containsKey("AdHoc")) {
-//        val assignmentList = config.getList("LivingAsChristians.AdHoc").asScala.toList
-//        val studentsWithAdhocAssignments = assignmentList.map(adhoc => selectAvailableAppointedMan(adhoc.render, func).run(students).value)
-//          .map(assignees => assignees._2).map(assignment => assignment.get._2.assignAdHoc(assignment.get._1))
-//        (students, Option(studentsWithAdhocAssignments))
-//      } else {
-//        (students, None)
-//      }
-//    }
-//    )
-//
-//  def assignFiveMinutesTalkAssignmentIfExists(config: Config, assignmentName: String, func: Int => Int): State[List[Student[Gender]], Option[(String, Student[Male])]] =
-//    State(students => {
-//      if (config.getObject("ApplyYourselfToFieldMinistry").containsKey(assignmentName)) {
-//        (selectAvailableMaleStudent(config.getString("ApplyYourselfToFieldMinistry.FiveMinutesTalk"), func).run(students).value)
-//      } else {
-//        (students, None)
-//      }
-//    }
-//    )
+  def assignFiveMinutesTalkAssignmentIfExists(config: Config, assignmentName: String, func: Int => Int): State[AllStudentsTuple, Option[(String, Student[Male])]] =
+    State(students => {
+      if (config.getObject("ApplyYourselfToFieldMinistry").containsKey(assignmentName)) {
+        (selectAvailableMaleStudent(config.getString("ApplyYourselfToFieldMinistry.FiveMinutesTalk"), func).run(students).value)
+      } else {
+        (students, None)
+      }
+    }
+  )
+  def assignVideoAssignmentIfExists(config: Config, assignmentName: String, chairman: Elder[Male]): State[AllStudentsTuple, Option[Elder[Male]]] =
+    State(students => {
+        if (config.getObject("ApplyYourselfToFieldMinistry").containsKey("VideoAssignments")) {
+          val assignmentList: List[String] = config.getList("ApplyYourselfToFieldMinistry.VideoAssignments").asScala.toList.map(_.render.stripPrefix("\"").stripSuffix("\""))
+          if (assignmentList.contains(assignmentName)) (students, Option(chairman)) else (students, None)
+        } else {
+          (students, None)
+        }
+      }
+    )
+
+  @tailrec
+  def assignMultipleAssignments(items: List[String], func: Int => Int, students: AllStudentsTuple, assignments: List[AdHoc]): (AllStudentsTuple, List[AdHoc]) =
+    items match {
+      case x :: xs => {
+        val (newState, selected) = selectAvailableAppointedMan(x, func).run(students).value
+        assignMultipleAssignments(xs, func, newState, selected.get._2.assignAdHoc(x) :: assignments )
+      }
+      case Nil => (students, assignments)
+    }
+
+  def assignAdhocAssignmentIfExists(config: Config, func: Int => Int): State[AllStudentsTuple, List[AdHoc]] =
+    State(students => {
+        if (config.getObject("LivingAsChristians").containsKey("AdHoc")) {
+          val assignmentList: List[String] = config.getList("LivingAsChristians.AdHoc").asScala.toList.map(_.render.stripPrefix("\"").stripSuffix("\""))
+          assignMultipleAssignments(assignmentList, func, students, List.empty[AdHoc])
+        } else {
+          (students, List.empty[AdHoc])
+        }
+      }
+    )
 
   def createOCLMSchedule: DbReader[OCLMSchedule] =
     Reader(db => {
 
       val createMidWeekMeeting: State[AllStudentsTuple, MidWeekMeeting] =
         for {
-          selectChairman <- selectAvailableElder(getRandomPosition)
-//          selectTenMinutesTalk <- selectAvailableAppointedMan(db.config.getString("TreasuresFromGodsWord.TenMinutesTalk"), getRandomPosition)
-//          selectSpiritualGems <- selectAvailableAppointedMan("", getRandomPosition)
-//
-//          selectBibleReading <- selectAvailableMaleStudent("", getRandomPosition)
-//
-//          selectInitialCallVideo <- assignVideoAssignmentIfExists(db.config, "InitialCallVideo", selectChairman.get)
-//          selectReturnVisitVideo <- assignVideoAssignmentIfExists(db.config, "ReturnVisitVideo", selectChairman.get)
+          selectedChairman <- selectAvailableElder(getRandomPosition)
+          selectedTenMinutesTalkSpeaker <- selectAvailableAppointedMan(db.config.getString("TreasuresFromGodsWord.TenMinutesTalk"), getRandomPosition)
+          selectedSpiritualGemsSpeaker <- selectAvailableAppointedMan("", getRandomPosition)
+          selectedBibleReader <- selectAvailableMaleStudent("", getRandomPosition)
+          selectedInitialCallVideoHandler <- assignVideoAssignmentIfExists(db.config, "InitialCallVideo", selectedChairman)
+          selectedReturnVisitVideoHandler <- assignVideoAssignmentIfExists(db.config, "ReturnVisitVideo", selectedChairman)
 
 //          selectInitialCallPublisher <- assignPairedAssignmentIfExists(db.config, "InitialCall", getRandomPosition)
 //          selectInitialCallSupport <- assignPairedAssignmentIfExists(db.config, "InitialCall", getRandomPosition)
@@ -257,26 +256,26 @@ object Utils {
 //          selectBibleStudyPublisher <- assignPairedAssignmentIfExists(db.config, "BibleStudy", getRandomPosition)
 //          selectBibleStudySupport <- assignPairedAssignmentIfExists(db.config, "BibleStudy", getRandomPosition)
 
-//          selectFiveMinutesTalk <- assignFiveMinutesTalkAssignmentIfExists(db.config, "FiveMinutesTalk", getRandomPosition)
-//          selectAdhocs <- assignAdhocAssignmentIfExists(db.config, getRandomPosition)
-//          selectCongregationBibleStudy <- selectAvailableElder(getRandomPosition)
-//          selectOpeningPrayer <- selectAvailableAppointedMan("", getRandomPosition)
-//          selectClosingPrayer <- selectAvailableAppointedMan("", getRandomPosition)
+          selectedFiveMinutesTalkSpeaker <- assignFiveMinutesTalkAssignmentIfExists(db.config, "FiveMinutesTalk", getRandomPosition)
+          selectedAdhocHandlers <- assignAdhocAssignmentIfExists(db.config, getRandomPosition)
+          selectCongregationBibleStudySpeaker <- selectAvailableElder(getRandomPosition)
+          selectedOpeningPrayerSpeaker <- selectAvailableAppointedMan("", getRandomPosition)
+          selectedClosingPrayerSpeaker <- selectAvailableAppointedMan("", getRandomPosition)
         } yield MidWeekMeeting(
-          chairman = Chairman(selectChairman),
-//          openingPrayer = OpeningPrayer(selectOpeningPrayer.get._2),
-//          closingPrayer = ClosingPrayer(selectClosingPrayer.get._2),
-//          tenMinutesTalk = TenMinutesTalk(selectTenMinutesTalk.get._1, selectTenMinutesTalk.get._2),
-//          spiritualGems = SpiritualGems(selectSpiritualGems.get._2),
-//          bibleReading = BibleReading(selectBibleReading.get._2),
-//          initialCallVideo = Option(InitialCallVideo(selectInitialCallVideo.get)),
-//          returnVisitVideo = Option(ReturnVisitVideo(selectReturnVisitVideo.get)),
+          chairman = Chairman(selectedChairman),
+          openingPrayer = OpeningPrayer(selectedOpeningPrayerSpeaker.get._2),
+          closingPrayer = ClosingPrayer(selectedClosingPrayerSpeaker.get._2),
+          tenMinutesTalk = TenMinutesTalk(selectedTenMinutesTalkSpeaker.get._1, selectedTenMinutesTalkSpeaker.get._2),
+          spiritualGems = SpiritualGems(selectedSpiritualGemsSpeaker.get._2),
+          bibleReading = BibleReading(selectedBibleReader.get._2),
+          initialCallVideo = if (selectedInitialCallVideoHandler.isEmpty) None else Some(InitialCallVideo(selectedInitialCallVideoHandler.get)),
+          returnVisitVideo = if (selectedReturnVisitVideoHandler.isEmpty) None else Some(ReturnVisitVideo(selectedReturnVisitVideoHandler.get)),
 //          initialCall = Option(Assignment.initialCall[Gender](selectInitialCall.get)),
 //          returnVisit = Option(returnVisit[Gender](selectReturnVisit.get)),
 //          bibleStudy = Option(bibleStudy[Gender](selectBibleStudy.get)),
-//          fiveMinutesTalk = Option(FiveMinutesTalk(selectFiveMinutesTalk.get._1, selectFiveMinutesTalk.get._2)),
-//          adHoc = selectAdhocs.get,
-//          congregationBibleStudy = CongregationBibleStudy(selectCongregationBibleStudy.get)
+          fiveMinutesTalk = Option(FiveMinutesTalk(selectedFiveMinutesTalkSpeaker.get._1, selectedFiveMinutesTalkSpeaker.get._2)),
+          adHoc = selectedAdhocHandlers,
+          congregationBibleStudy = CongregationBibleStudy(selectCongregationBibleStudySpeaker)
         )
 
       val (_, midWeekMeeting) = createMidWeekMeeting.run(db.students).value
