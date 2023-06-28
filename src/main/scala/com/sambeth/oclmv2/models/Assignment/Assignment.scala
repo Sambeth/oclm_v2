@@ -1,6 +1,7 @@
 package com.sambeth.oclmv2.models.Assignment
 
 import com.sambeth.oclmv2.models.Assignment.AssignmentType._
+import com.sambeth.oclmv2.models.Gender.Gender
 import com.sambeth.oclmv2.models.Gender.Gender._
 import com.sambeth.oclmv2.models.Student.Student
 import com.sambeth.oclmv2.models.Student.Student._
@@ -36,7 +37,12 @@ object Assignment {
 
   case class CongregationBibleStudy(owner: Elder[Male]) extends Assignment[LivingAsChristians]
 
-  def initialCall[G](owner: Student[G])(support: Student[G]): InitialCall[G] = InitialCall(owner, support)
+  def initialCall[G](owner: Student[G])(support: Student[G]): InitialCall[G] = {
+    println(owner.getClass)
+    println(support.getClass)
+    InitialCall(owner, support)
+  }
+
   def returnVisit[G](owner: Student[G])(support: Student[G]): ReturnVisit[G] = ReturnVisit(owner, support)
   def bibleStudy[G](owner: Student[G])(support: Student[G]): BibleStudy[G] = BibleStudy(owner, support)
 
